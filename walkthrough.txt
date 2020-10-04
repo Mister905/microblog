@@ -1,0 +1,115 @@
+# .gitignore
+touch .gitignore
+
+venv
+.flaskenv
+__pycache__
+
+
+# Generate a requirements file and then install from it in another environment
+
+pip3 freeze > requirements.txt
+
+# Install Requirements
+pip3 install -r requirements.txt
+
+mkdir microblog
+
+cd microblog
+
+python3 -m venv venv
+
+# Active Virutal Environment
+source venv/bin/activate
+
+# Install Flask
+pip install flask
+
+# Create package for application source files
+mkdir app
+
+cd app
+
+# Create routes.py
+touch ./app/routes.py
+
+# Create top-level script that runs application - here flask obtains the application instance
+touch /microblog.py
+
+pip install flask python-dotenv
+
+touch .flaskenv
+
+FLASK_APP=microblog.py
+FLASK_ENV=development
+
+# Install Flask-WTF
+pip install flask-wtf
+
+# Define secret key in .flaskenv
+FLASK_SECRET_KEY=brownSumm3r92
+
+# Install flask-sqlalchemy
+pip install flask-sqlalchemy
+
+# Install flask-migrate
+pip install flask-migrate
+
+# Init migration directory
+flask db init
+
+# Create migration for new table
+flask db migrate -m 'Created users table'
+
+# Apply migration to db
+flask db upgrade
+
+# Other migration commands
+
+flask db upgrade
+
+flask db downgrade
+
+^ these methods are defined in migration files
+
+/home/james/microblog/migrations/versions/226567f606f6_created_users_table.py
+
+# Create migration for new table
+flask db migrate -m 'Created posts table'
+
+flask db history
+
+e.g.
+
+226567f606f6 -> 714daa6ef92d (head), Created posts table
+<base> -> 226567f606f6, Created users table
+
+# Create test user
+python
+from app import db
+from app.models import User, Post
+u = User(username='john', email='john@example.com')
+db.session.add(u)
+db.session.commit()
+
+# Create another test user
+u = User(username='jane', email='jane@example.com')
+db.session.add(u)
+db.session.commit()
+
+# Fetch users
+users = User.query.all()
+users
+
+# Create test post
+p = Post(body='My First Post', author=u)
+db.session.add(p)
+db.session.commit()
+
+# Fetch posts
+posts = Post.query.all()
+posts
+
+
+# Open flask shell -> Imports the objects defined in microblog.py 
+flask shell
