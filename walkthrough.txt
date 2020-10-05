@@ -8,10 +8,10 @@ __pycache__
 
 # Generate a requirements file and then install from it in another environment
 
-pip3 freeze > requirements.txt
+pip freeze > requirements.txt
 
 # Install Requirements
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 
 mkdir microblog
 
@@ -113,3 +113,20 @@ posts
 
 # Open flask shell -> Imports the objects defined in microblog.py 
 flask shell
+
+
+# Install flask-login
+pip install flask-login
+
+# Install email-validator - The Email() validator from WTForms requires an external dependency to be installed
+pip install email-validator
+
+
+# Instance of 'scoped_session' has no 'add' member
+https://stackoverflow.com/a/59214469
+
+
+# Adding New Fields to Model
+flask db migrate -m "Added new fields in user model"
+
+flask db upgrade

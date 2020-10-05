@@ -1,13 +1,28 @@
-from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from app import db, login
 
-class User(db.Model):
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('followed_user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True)
     password = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    about_me = db.Column(db.String(140))
+    last_visit = db.Column(db.DateTime, default=datetime.utcnow)
+
+    following = db.relationship(
+        'User', secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_user_id == id),
+        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -17,6 +32,11 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class Post(db.Model):
